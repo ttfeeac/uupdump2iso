@@ -1,4 +1,4 @@
-name: Windows11_25H2_amd64
+name: windows11_25h2_amd64
 
 on:
   schedule:
@@ -9,10 +9,10 @@ on:
 
 env:
   SEARCH_VERSION: 'w11-25h2'
-  FILE_NAME: Windows11_25H2_amd64
+  FILE_NAME: windows11_25h2_amd64
 
 jobs:
-  Windows11_25H2_amd64:
+  windows11_25h2_amd64:
     runs-on: windows-latest
 
     steps:
