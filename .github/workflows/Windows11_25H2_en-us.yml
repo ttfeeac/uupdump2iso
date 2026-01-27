@@ -18,7 +18,7 @@ jobs:
     - name: Config FILENAME
       shell: pwsh
       run: |
-        $FILE_NAME = "${{ env.SEARCH_VERSION }}" -replace 'w11', 'Windows11' + '_amd64'
+        $FILE_NAME = ( "${{ env.SEARCH_VERSION }}" -replace 'w11', 'Windows11' ) + '_amd64'
         Write-Host $FILE_NAME
         Add-Content $env:GITHUB_ENV "FILE_NAME=$FILE_NAME"
 
