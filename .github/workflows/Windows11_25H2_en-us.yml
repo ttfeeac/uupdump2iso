@@ -5,17 +5,22 @@ on:
     - cron: '1 0 * * 1'
   repository_dispatch:
   workflow_dispatch:
-#on: [push, pull_request]
 
 env:
   SEARCH_VERSION: 'w11-25h2'
-  FILE_NAME: windows11_25h2_amd64
 
 jobs:
   windows11_25h2_amd64:
     runs-on: windows-latest
 
     steps:
+
+    - name: Config FILENAME
+      shell: pwsh
+      run: |
+        $FILE_NAME = "${{ env.SEARCH_VERSION }}" -replace 'w11', 'Windows11' + '_amd64'
+        Write-Host $FILE_NAME
+        Add-Content $env:GITHUB_ENV "FILE_NAME=$FILE_NAME"
 
     # Checkout repository
     - name: Checkout repository
@@ -30,14 +35,13 @@ jobs:
       run: |
         pip install requests
         pip install bs4
- 
+        
     - name: get python script
       shell: pwsh
       run: | 
         $PYTHON_RESULT=python ./script/getVersion.py ${{env.SEARCH_VERSION}}
-        echo $PYTHON_RESULT
-        echo "Build_VERSION=$PYTHON_RESULT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
-
+        Write-Host $PYTHON_RESULT
+        Add-Content $env:GITHUB_ENV "Build_VERSION=$PYTHON_RESULT"
         
     # make ISO
     - name: UUP dump WinISO
