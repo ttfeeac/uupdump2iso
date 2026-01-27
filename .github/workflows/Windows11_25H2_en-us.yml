@@ -1,36 +1,72 @@
-# This is a basic workflow to help you get started with Actions
+name: Windows11_25H2_amd64
 
-name: CI
+on: workflow_dispatch
+#on: [push, pull_request]
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+env:
+  SEARCH_VERSION: 'w11-25h2'
+  FILE_NAME: Windows11_25H2_amd64
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+  Windows11_25H2_amd64:
+    runs-on: windows-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+    # Checkout repository
+    - name: Checkout repository
+      uses: actions/checkout@v5
+      
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+  
+    - name: Install Python dependencies
+      run: |
+        pip install requests
+        pip install bs4
+ 
+    - name: get python script
+      shell: pwsh
+      run: | 
+        $url = "https://raw.githubusercontent.com/ttfeeac/UUPdumpWinISO/refs/heads/main/script/getVersion.py"
+        $outputPath = "D:\a\UUPdumpWinISO\UUPdumpWinISO\w11_26h1_amd_en-us.py"
+        Invoke-WebRequest -Uri $url -OutFile $outputPath -UseBasicParsing
+        #curl https://raw.githubusercontent.com/ttfeeac/UUPdumpWinISO/refs/heads/main/script/w11_26h1_amd_en-us.py D:\\a\\UUPdumpWinISO\\UUPdumpWinISO\\
+        $PYTHON_RESULT=python getVersion.py ${{env.SEARCH_VERSION}}
+        echo $PYTHON_RESULT
+        echo "Build_VERSION=$PYTHON_RESULT" >> $GITHUB_ENV
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+        
+    # make ISO
+    - name: UUP dump WinISO
+      shell: cmd
+      run: |
+        dir
+        uup_download_windows.cmd
+
+    # chack working-directory: 
+    - name: dir dir
+      shell: cmd
+      run: dir
+
+    # package
+    - name: Package binaries
+      run: |
+        #ls     #Directory: D:\a\UUPdumpWinISO\UUPdumpWinISO
+        7z a -v1950M ${{env.FILE_NAME}}-${{env.Build_VERSION}}.7z ./*.iso -mx=9
+
+    # upload iso
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ${{env.FILE_NAME}}-${{env.Build_VERSION}}
+        path: ${{env.FILE_NAME}}-${{env.Build_VERSION}}.7z*
+
+    # Release iso
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{env.FILE_NAME}}-${{env.Build_VERSION}}
+        release_name: ${{env.FILE_NAME}}-${{env.Build_VERSION}}
+        files: ${{env.FILE_NAME}}-${{env.Build_VERSION}}.7z*
