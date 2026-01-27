@@ -1,6 +1,10 @@
 name: Windows11_25H2_amd64
 
-on: workflow_dispatch
+on:
+  schedule:
+    - cron: '1 0 * * 1'
+  repository_dispatch:
+  workflow_dispatch:
 #on: [push, pull_request]
 
 env:
