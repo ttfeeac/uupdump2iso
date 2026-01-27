@@ -10,7 +10,7 @@ env:
   SEARCH_VERSION: 'w11-25h2'
 
 jobs:
-  windows11_25h2_amd64:
+  windows:
     runs-on: windows-latest
 
     steps:
