@@ -30,10 +30,6 @@ jobs:
     - name: get python script
       shell: pwsh
       run: | 
-        #$url = "https://raw.githubusercontent.com/ttfeeac/UUPdumpWinISO/refs/heads/main/script/getVersion.py"
-        #$outputPath = "D:\a\UUPdumpWinISO\UUPdumpWinISO\w11_26h1_amd_en-us.py"
-        #Invoke-WebRequest -Uri $url -OutFile $outputPath -UseBasicParsing
-        #curl https://raw.githubusercontent.com/ttfeeac/UUPdumpWinISO/refs/heads/main/script/w11_26h1_amd_en-us.py D:\\a\\UUPdumpWinISO\\UUPdumpWinISO\\
         $PYTHON_RESULT=python ./script/getVersion.py ${{env.SEARCH_VERSION}}
         echo $PYTHON_RESULT
         echo "Build_VERSION=$PYTHON_RESULT" >> $GITHUB_ENV
@@ -54,7 +50,6 @@ jobs:
     # package
     - name: Package binaries
       run: |
-        #ls     #Directory: D:\a\UUPdumpWinISO\UUPdumpWinISO
         7z a -v1950M ${{env.FILE_NAME}}-${{env.Build_VERSION}}.7z ./*.iso -mx=9
 
     # upload iso
