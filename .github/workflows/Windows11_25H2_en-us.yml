@@ -36,7 +36,7 @@ jobs:
       run: | 
         $PYTHON_RESULT=python ./script/getVersion.py ${{env.SEARCH_VERSION}}
         echo $PYTHON_RESULT
-        echo "Build_VERSION=$PYTHON_RESULT" >> $GITHUB_ENV
+        echo "Build_VERSION=$PYTHON_RESULT" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
         
     # make ISO
@@ -53,6 +53,7 @@ jobs:
 
     # package
     - name: Package binaries
+      shell: cmd
       run: |
         7z a -v1950M ${{env.FILE_NAME}}-${{env.Build_VERSION}}.7z ./*.iso -mx=9
 
