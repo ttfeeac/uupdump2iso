@@ -31,7 +31,7 @@ def getIDVersion(searchVersion):
         'referer': 'https://uupdump.net/',
         'priority': 'u=0, i'
     }
-    html_content = requests.get(f"https://uupdump.cn/known.php?q=category:{searchVersion}",headers=headers,verify=False,allow_redirects=True).text
+    html_content = requests.get(f"https://uupdump.net/known.php?q=category:{searchVersion}",headers=headers,verify=False,allow_redirects=True).text
     # print(html_content)
     soup = BeautifulSoup(html_content, 'html.parser')
     table_rows = soup.find('table', class_='ui celled striped table').find_all('tr')
@@ -97,7 +97,7 @@ def download_file(uuid):
         'priority': 'u=0, i'
     }
     data = "autodl=3&updates=1&cleanup=1&netfx=1&esd=1&virtualEditions%5B%5D=IoTEnterprise"
-    url = f"https://uupdump.net/get.php?id={uuid}&pack=en-us&edition=professional"
+    url = f"https://uupdump.cn/get.php?id={uuid}&pack=en-us&edition=professional"
     response = requests.post(url,headers=headers,data=data,verify=False)
     response.raise_for_status()
 
