@@ -31,7 +31,7 @@ def getIDVersion(searchVersion):
         'referer': 'https://uupdump.net/',
         'priority': 'u=0, i'
     }
-    html_content = requests.get(f"https://uupdump.net/known.php?q=category:{searchVersion}",headers=headers,verify=False,allow_redirects=True).text
+    html_content = requests.get(f"https://uupdump.cn/known.php?q=category:{searchVersion}",headers=headers,verify=False,allow_redirects=True).text
     # print(html_content)
     soup = BeautifulSoup(html_content, 'html.parser')
     table_rows = soup.find('table', class_='ui celled striped table').find_all('tr')
