@@ -40,10 +40,14 @@ def getIDVersion(searchVersion):
         if row.find('th'):
             continue
         cell_text = row.get_text().lower()
-        if 'amd' in cell_text:
-            target_row = row
-            break
-
+        if 'w11' in searchVersion:
+            if 'amd64' in cell_text and 'Windows 11, version' in cell_text:
+                target_row = row
+                break
+        if 'w10' in searchVersion:
+            if 'amd64' in cell_text:
+                target_row = row
+                break
     if target_row:
         link = target_row.find('a')['href']
         uuid = link.split('id=')[1]
