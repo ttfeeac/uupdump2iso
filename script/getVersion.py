@@ -41,7 +41,7 @@ def getIDVersion(searchVersion):
             continue
         cell_text = row.get_text().lower()
         if 'w11' in searchVersion:
-            if 'amd' in cell_text and 'Windows 11, version' in cell_text:
+            if 'amd' in cell_text and 'windows 11, version' in cell_text:
                 target_row = row
                 break
         if 'w10' in searchVersion:
