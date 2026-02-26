@@ -44,8 +44,8 @@ def getIDVersion(searchVersion):
             if 'amd' in cell_text and 'windows 11, version' in cell_text:
                 target_row = row
                 break
-        if 'w10' in searchVersion:
-            if 'amd' in cell_text:
+        if 'w10-22h2' in searchVersion:
+            if 'amd' in cell_text and 'Cumulative Update for Windows 10' in cell_text:
                 target_row = row
                 break
         if 'server-24h2' in searchVersion:
