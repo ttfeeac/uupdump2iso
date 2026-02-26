@@ -57,7 +57,7 @@ def getIDVersion(searchVersion):
                 target_row = row
                 break
         if 'server-21h2' in searchVersion:
-            if 'amd' in cell_text and 'Cumulative Update for Microsoft server operating system version 21H2' in cell_text:
+            if 'amd' in cell_text and 'Feature update to Microsoft server' in cell_text:
                 target_row = row
                 break  
     if target_row:
