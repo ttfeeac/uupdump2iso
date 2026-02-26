@@ -76,7 +76,7 @@ def getIDVersion(searchVersion):
 
 
 
-def download_file(uuid):
+def download_file(uuid,language):
     headers = {
         'host': 'uupdump.net',
         'content-length': '78',
@@ -97,11 +97,11 @@ def download_file(uuid):
         'accept-encoding': 'gzip, deflate, br, zstd',
         'accept-language': 'en-US,en;q=0.9',
         'cookie': '__itrace_wid=7e01834e-5e27-47f0-0f94-5f832a020f77',
-        #'referer': f'https://uupdump.net/download.php?id={uuid}&pack=en-us&edition=professional',
+        #'referer': f'https://uupdump.net/download.php?id={uuid}&pack={language}&edition=professional',
         'priority': 'u=0, i'
     }
     data = "autodl=3&updates=1&cleanup=1&netfx=1&esd=1&virtualEditions%5B%5D=IoTEnterprise"
-    url = f"https://uupdump.net/get.php?id={uuid}&pack=en-us&edition=professional"
+    url = f"https://uupdump.net/get.php?id={uuid}&pack={language}&edition=professional"
     response = requests.post(url,headers=headers,data=data,verify=False)
     response.raise_for_status()
 
@@ -116,13 +116,15 @@ def unzip(zip_file_path):
         zip_obj.extractall(path='./')
 
 def main():
-    uuid,version = getIDVersion(sys.argv[1])
+    SEARCH_VERSION = sys.argv[1]
+    LANGUAGE = sys.argv[2]
+    uuid,version = getIDVersion(SEARCH_VERSION)
     # uuid,version = getIDVersion("26h1")
     # print(uuid)
     # print(version)
     # uuid = "0e1cec91-9bb2-41ad-929f-fe36a5beda02"
     # version = '28000.1450'
-    download_file(uuid)
+    download_file(uuid,LANGUAGE)
     unzip("a.zip")
     print(version)
 
