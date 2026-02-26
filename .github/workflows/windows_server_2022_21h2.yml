@@ -13,7 +13,7 @@ jobs:
   build:
     strategy:
       matrix:
-        language: ['en-us', 'es-mx', 'pt-br', 'it-it', 'zh-cn', 'zh-tw']
+        language: ['en-us', 'es-es', 'pt-br', 'it-it', 'zh-cn', 'zh-tw']
     runs-on: windows-latest
 
     steps:
