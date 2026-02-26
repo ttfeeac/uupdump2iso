@@ -1,0 +1,79 @@
+name: windows10_22h2_amd64
+
+on:
+  schedule:
+    - cron: '1 0 * * 1'
+  repository_dispatch:
+  workflow_dispatch:
+
+env:
+  SEARCH_VERSION: 'w10-22h2'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        language: ['en-us', 'es-mx', 'pt-br', 'it-it', 'zh-cn', 'zh-tw']
+    runs-on: windows-latest
+
+    steps:
+
+    - name: Config FILENAME
+      shell: pwsh
+      run: |
+        $FILE_NAME = ( "${{ env.SEARCH_VERSION }}" -replace 'w', 'windows' -replace '-', '_' ) + '_amd64'
+        Write-Host $FILE_NAME
+        Add-Content $env:GITHUB_ENV "FILE_NAME=$FILE_NAME"
+
+    # Checkout repository
+    - name: Checkout repository
+      uses: actions/checkout@v5
+      
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+  
+    - name: Install Python dependencies
+      run: |
+        pip install requests
+        pip install bs4
+        
+    - name: get python script
+      shell: pwsh
+      run: | 
+        $PYTHON_RESULT=python ./script/getVersion.py ${{env.SEARCH_VERSION}} ${{matrix.language}}
+        Write-Host $PYTHON_RESULT
+        Add-Content $env:GITHUB_ENV "Build_VERSION=$PYTHON_RESULT"
+        
+    # make ISO
+    - name: UUP dump WinISO
+      shell: cmd
+      run: |
+        dir
+        uup_download_windows.cmd
+
+    # chack working-directory: 
+    - name: dir dir
+      shell: cmd
+      run: dir
+
+    # package
+    - name: Package binaries
+      shell: cmd
+      run: |
+        7z a -v1950M ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}.7z ./*.iso -mx=9
+
+    # upload iso
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}
+        path: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}.7z*
+
+    # Release iso
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}
+        release_name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}
+        files: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}.7z*
