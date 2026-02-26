@@ -88,7 +88,7 @@ def getIDVersion(searchVersion):
 
 
 
-def download_file(uuid,language):
+def download_file(uuid,searchVersion,language):
     headers = {
         'host': 'uupdump.net',
         'content-length': '78',
@@ -114,6 +114,10 @@ def download_file(uuid,language):
     }
     data = "autodl=3&updates=1&cleanup=1&netfx=1&esd=1&virtualEditions%5B%5D=IoTEnterprise"
     url = f"https://uupdump.net/get.php?id={uuid}&pack={language}&edition=professional"
+    if 'server' in searchVersion:   
+        data = "autodl=3&updates=1&cleanup=1&netfx=1&esd=1"
+        url = f"https://uupdump.net/get.php?id={uuid}&pack={language}&edition=serverdatacenter%3Bserverdatacentercore%3Bserverstandard%3Bserverstandardcore"
+    
     response = requests.post(url,headers=headers,data=data,verify=False)
     response.raise_for_status()
 
@@ -136,7 +140,7 @@ def main():
     # print(version)
     # uuid = "0e1cec91-9bb2-41ad-929f-fe36a5beda02"
     # version = '28000.1450'
-    download_file(uuid,LANGUAGE)
+    download_file(uuid,SEARCH_VERSION,LANGUAGE)
     unzip("a.zip")
     print(version)
 
