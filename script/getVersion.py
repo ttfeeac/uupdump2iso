@@ -48,6 +48,18 @@ def getIDVersion(searchVersion):
             if 'amd' in cell_text:
                 target_row = row
                 break
+        if 'server-24h2' in searchVersion:
+            if 'amd' in cell_text and 'Windows Server 2025' in cell_text:
+                target_row = row
+                break
+        if 'server-23h2' in searchVersion:
+            if 'amd' in cell_text and 'Windows Server, version 23H2' in cell_text:
+                target_row = row
+                break
+        if 'server-21h2' in searchVersion:
+            if 'amd' in cell_text and 'Cumulative Update for Microsoft server operating system version 21H2' in cell_text:
+                target_row = row
+                break  
     if target_row:
         link = target_row.find('a')['href']
         uuid = link.split('id=')[1]
