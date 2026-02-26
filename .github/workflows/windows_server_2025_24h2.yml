@@ -1,4 +1,4 @@
-name: windows_server_24h2_amd64
+name: windows_server_2025_24h2
 
 on:
   schedule:
@@ -10,7 +10,10 @@ env:
   SEARCH_VERSION: 'server-24h2'
 
 jobs:
-  windows:
+  build:
+    strategy:
+      matrix:
+        language: ['en-us', 'es-mx', 'pt-br', 'it-it', 'zh-cn', 'zh-tw']
     runs-on: windows-latest
 
     steps:
@@ -39,7 +42,7 @@ jobs:
     - name: get python script
       shell: pwsh
       run: | 
-        $PYTHON_RESULT=python ./script/getVersion.py ${{env.SEARCH_VERSION}}
+        $PYTHON_RESULT=python ./script/getVersion.py ${{env.SEARCH_VERSION}} ${{matrix.language}}
         Write-Host $PYTHON_RESULT
         Add-Content $env:GITHUB_ENV "Build_VERSION=$PYTHON_RESULT"
         
@@ -59,18 +62,18 @@ jobs:
     - name: Package binaries
       shell: cmd
       run: |
-        7z a -v1950M ${{env.FILE_NAME}}_${{env.Build_VERSION}}.7z ./*.iso -mx=9
+        7z a -v1950M ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}.7z ./*.iso -mx=9
 
     # upload iso
     - uses: actions/upload-artifact@v4
       with:
-        name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}
-        path: ${{env.FILE_NAME}}_${{env.Build_VERSION}}.7z*
+        name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}
+        path: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}.7z*
 
     # Release iso
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}
-        release_name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}
-        files: ${{env.FILE_NAME}}_${{env.Build_VERSION}}.7z*
+        tag_name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}
+        release_name: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}
+        files: ${{env.FILE_NAME}}_${{env.Build_VERSION}}_${{matrix.language}}.7z*
