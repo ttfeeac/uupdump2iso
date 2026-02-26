@@ -115,7 +115,7 @@ def download_file(uuid,searchVersion,language):
     data = "autodl=3&updates=1&cleanup=1&netfx=1&esd=1&virtualEditions%5B%5D=IoTEnterprise"
     url = f"https://uupdump.net/get.php?id={uuid}&pack={language}&edition=professional"
     if 'server' in searchVersion:   
-        data = "autodl=3&updates=1&cleanup=1&netfx=1&esd=1"
+        data = "autodl=2&updates=1&cleanup=1&netfx=1&esd=1"
         url = f"https://uupdump.net/get.php?id={uuid}&pack={language}&edition=serverdatacenter%3Bserverdatacentercore%3Bserverstandard%3Bserverstandardcore"
     
     response = requests.post(url,headers=headers,data=data,verify=False)
