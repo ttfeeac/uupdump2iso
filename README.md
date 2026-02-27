@@ -9,3 +9,5 @@
 - Windows 11 24H2
 - Windows 11 25H2
 - Windows 11 26H1
+- Windows server 2025
+- Windows server 2022
